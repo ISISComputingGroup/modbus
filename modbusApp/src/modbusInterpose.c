@@ -253,10 +253,8 @@ static asynStatus writeIt(void *ppvt, asynUser *pasynUser,
         case modbusLinkTCP:
         case modbusLinkUDP:
             /* Build the MBAP header */
-            if (pPvt->skipTransactionId != 0) {
-                pPvt->transactionId = (pPvt->transactionId + 1) & 0xFFFF;
-                mbapHeader.transactId    = htons(pPvt->transactionId);
-            }
+            pPvt->transactionId = (pPvt->transactionId + 1) & 0xFFFF;
+            mbapHeader.transactId    = htons(pPvt->transactionId);
             mbapHeader.protocolType  = htons(modbusEncoding);
             mbapHeader.cmdLength     = htons(cmdLength);
  
