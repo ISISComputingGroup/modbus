@@ -15,7 +15,6 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
-#include <stdbool.h>
 
 #include <cantProceed.h>
 #include <epicsAssert.h>
@@ -90,6 +89,7 @@ typedef struct modbusPvt {
     modbusLinkType linkType;
     asynUser       *pasynUser;
     int            transactionId;
+    int            skipTransactionId;
     size_t         nWritten;
     char           buffer[MAX_MODBUS_FRAME_SIZE];
     char           rxBuffer[MAX_MODBUS_FRAME_SIZE];
@@ -253,7 +253,7 @@ static asynStatus writeIt(void *ppvt, asynUser *pasynUser,
         case modbusLinkTCP:
         case modbusLinkUDP:
             /* Build the MBAP header */
-            if (!pPvt->skipTransactionId) {
+            if (pPvt->skipTransactionId != 0) {
                 pPvt->transactionId = (pPvt->transactionId + 1) & 0xFFFF;
                 mbapHeader.transactId    = htons(pPvt->transactionId);
             }
@@ -370,7 +370,6 @@ static asynStatus readIt(void *ppvt, asynUser *pasynUser,
                 if (nbytesActual >= 2) {
                     int id = ((pPvt->rxBuffer[0] & 0xFF)<<8)|(pPvt->rxBuffer[1]&0xFF);
                     if (!pPvt->skipTransactionId && id == pPvt->transactionId) break;
-                    if (id == pPvt->transactionId) break;
                 }
             }
             /* Copy bytes beyond mbapHeader to output buffer */
