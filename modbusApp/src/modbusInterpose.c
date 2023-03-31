@@ -367,7 +367,7 @@ static asynStatus readIt(void *ppvt, asynUser *pasynUser,
                 }
                 if (nbytesActual >= 2) {
                     int id = ((pPvt->rxBuffer[0] & 0xFF)<<8)|(pPvt->rxBuffer[1]&0xFF);
-                    if (pPvt->skipTransactionId == 0 && id == pPvt->transactionId) break;
+                    if (pPvt->skipTransactionId != 0 || id == pPvt->transactionId) break;
                 }
             }
             /* Copy bytes beyond mbapHeader to output buffer */
