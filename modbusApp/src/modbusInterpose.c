@@ -13,6 +13,7 @@
 
 #include <stddef.h>
 #include <string.h>
+
 #include <stdlib.h>
 #include <stdio.h>
 
@@ -510,7 +511,7 @@ static const iocshArg modbusInterposeConfigArg0 = { "portName", iocshArgString }
 static const iocshArg modbusInterposeConfigArg1 = { "link type", iocshArgInt };
 static const iocshArg modbusInterposeConfigArg2 = { "timeout (msec)", iocshArgInt };
 static const iocshArg modbusInterposeConfigArg3 = { "write delay (msec)", iocshArgInt };
-static const iocshArg modbusInterposeConfigArg4 = { "skip transaction id", iocshArgInt };
+static const iocshArg modbusInterposeConfigArg4 = { "skip transaction id check", iocshArgInt };
 static const iocshArg *modbusInterposeConfigArgs[] = {
                                                     &modbusInterposeConfigArg0,
                                                     &modbusInterposeConfigArg1,
