@@ -90,7 +90,7 @@ typedef struct modbusPvt {
     modbusLinkType linkType;
     asynUser       *pasynUser;
     int            transactionId;
-    int            skipTransactionId;
+    int            skipTransactionIdCheck;
     size_t         nWritten;
     char           buffer[MAX_MODBUS_FRAME_SIZE];
     char           rxBuffer[MAX_MODBUS_FRAME_SIZE];
@@ -123,7 +123,8 @@ static asynOctet octet = {
 
 epicsShareFunc int modbusInterposeConfig(const char *portName,
                                          modbusLinkType linkType, 
-                                         int timeoutMsec, int writeDelayMsec, const int skipTransactionId)
+                                         int timeoutMsec, int writeDelayMsec,
+                                         int skipTransactionIdCheck)
 {
     modbusPvt     *pPvt;
     asynInterface *pasynInterface;
@@ -138,7 +139,7 @@ epicsShareFunc int modbusInterposeConfig(const char *portName,
     if (pPvt->timeout == 0.0) pPvt->timeout = DEFAULT_TIMEOUT;
     pPvt->modbusInterface.interfaceType = asynOctetType;
     pPvt->modbusInterface.pinterface = &octet;
-    pPvt->skipTransactionId = skipTransactionId;
+    pPvt->skipTransactionIdCheck = skipTransactionIdCheck;
     pPvt->modbusInterface.drvPvt = pPvt;
     pasynUser = pasynManager->createAsynUser(0,0);
     pPvt->pasynUser = pasynUser;
@@ -368,7 +369,7 @@ static asynStatus readIt(void *ppvt, asynUser *pasynUser,
                 }
                 if (nbytesActual >= 2) {
                     int id = ((pPvt->rxBuffer[0] & 0xFF)<<8)|(pPvt->rxBuffer[1]&0xFF);
-                    if (pPvt->skipTransactionId != 0 || id == pPvt->transactionId) break;
+                    if (pPvt->skipTransactionIdCheck != 0 || id == pPvt->transactionId) break;
                 }
             }
             /* Copy bytes beyond mbapHeader to output buffer */

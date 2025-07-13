@@ -30,8 +30,9 @@ int main(int argc, char *argv[])
     /* modbusInterposeConfig(const char *portName, 
      *                       modbusLinkType linkType,
      *                       int timeoutMsec, 
-     *                       int writeDelayMsec) */
-    modbusInterposeConfig("Koyo1", modbusLinkTCP, 5000, 0);
+     *                       int writeDelayMsec,
+     *                       int skipTransactionIdCheck) */
+    modbusInterposeConfig("Koyo1", modbusLinkTCP, 5000, 0, 0);
 
     /* drvModbusAsyn(const char *portName, const char *octetPortName, 
      *               int modbusSlave, int modbusFunction, 
